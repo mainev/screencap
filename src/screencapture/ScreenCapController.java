@@ -8,7 +8,6 @@ package screencapture;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
@@ -22,20 +21,26 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javax.imageio.ImageIO;
 
 /**
  *
  * @author maine
  */
-public class FXMLDocumentController implements Initializable {
+public class ScreenCapController implements Initializable {
 
     @FXML
     private AnchorPane mainStage;
@@ -48,11 +53,15 @@ public class FXMLDocumentController implements Initializable {
     private Button btnStop;
     @FXML
     private Button btnChangeDirectory;
+    
 
     @FXML
     private TextField directory;
     @FXML
     private TextField countdown;
+    
+    @FXML
+    private Hyperlink aboutLink;
 
     private File selectedDirectory = null;
     private ObjectProperty<Boolean> startCapture = new SimpleObjectProperty<Boolean>(false);
@@ -60,19 +69,32 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void btnStartCaptureOnClick(ActionEvent event) {
-
         startCapture.setValue(Boolean.TRUE);
-
     }
 
     @FXML
     public void StopScreenCap(ActionEvent event) {
-//        this.startCapture = false;
         this.startCapture.setValue(Boolean.FALSE);
     }
 
+    @FXML
+    public void aboutClick(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("About.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+          //  stage.initStyle(StageStyle.UNDECORATED);
+            stage.setTitle("About");
+            stage.setScene(new Scene(root1));
+            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public static String getCurrentTimeStamp() {
-        SimpleDateFormat sdfDate = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");//dd/MM/yyyy
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd-MM-yyyy_HH.mm.ss");
         Date now = new Date();
         String strDate = sdfDate.format(now);
         return strDate;
@@ -92,7 +114,7 @@ public class FXMLDocumentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+
         btnStartCapture.setDisable(true);
         btnStop.setDisable(true);
         directory.setDisable(true);
@@ -113,7 +135,7 @@ public class FXMLDocumentController implements Initializable {
                     timer.scheduleAtFixedRate(new java.util.TimerTask() {
                         @Override
                         public void run() {
-                            String path = selectedDirectory.getAbsolutePath() + "\\cap_" + getCurrentTimeStamp() + ".png";
+                            String path = selectedDirectory.getAbsolutePath() + "\\screencap_" + getCurrentTimeStamp() + ".png";
 
                             try {
                                 Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
@@ -125,10 +147,9 @@ public class FXMLDocumentController implements Initializable {
 
                             } catch (Exception ex) {
                             }
-                            
+
                         }
                     }, count * 1000, count * 1000);
-                    
 
                 } else {
                     System.out.println("ScreenCap stopped.");
