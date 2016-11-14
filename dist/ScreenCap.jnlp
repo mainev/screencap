@@ -4,11 +4,15 @@
     <title>ScreenCap</title>
     <vendor>maine</vendor>
     <description>null</description>
+    <icon href="src/screencapture/logo.ico"  kind="splash"/>
+    <icon href="C:\Users\maine\Documents\NetBeansProjects\ScreenCap\build\icon\ScreenCap.ico" />
     <offline-allowed/>
+  <shortcut><desktop/></shortcut>
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="ScreenCap.jar" size="96787" download="eager" />
+    <jar href="ScreenCap.jar" size="249257" download="eager" />
+    <jar href="lib/jxl.jar" size="725735" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="ScreenCap" >
     <param name="requiredFXVersion" value="8.0+"/>
